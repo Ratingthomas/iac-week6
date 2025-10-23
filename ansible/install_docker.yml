@@ -1,11 +1,11 @@
 ---
 - name: Install Docker from official Docker repository
   hosts: all
-  become: yes
+  become: true
 
   tasks:
     - name: Remove old Docker versions (if any)
-      apt:
+      ansible.builtin.apt:
         name:
           - docker
           - docker-engine
@@ -13,12 +13,12 @@
           - containerd
           - runc
         state: absent
-        purge: yes
-        autoremove: yes
-      ignore_errors: yes
+        purge: true
+        autoremove: true
+      failed_when: false
 
     - name: Install required system packages
-      apt:
+      ansible.builtin.apt:
         name:
           - apt-transport-https
           - ca-certificates
@@ -26,7 +26,7 @@
           - gnupg
           - lsb-release
         state: present
-        update_cache: yes
+        update_cache: true
 
     - name: Add Docker's official GPG key
       ansible.builtin.apt_key:
@@ -43,18 +43,18 @@
         filename: docker
 
     - name: Update apt and install Docker Engine
-      apt:
+      ansible.builtin.apt:
         name:
           - docker-ce
           - docker-ce-cli
           - containerd.io
           - docker-buildx-plugin
           - docker-compose-plugin
-        state: latest
-        update_cache: yes
+        state: present
+        update_cache: true
 
     - name: Enable and start Docker service
-      systemd:
+      ansible.builtin.systemd:
         name: docker
-        enabled: yes
+        enabled: true
         state: started
