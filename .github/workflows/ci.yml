@@ -1,0 +1,77 @@
+name: Week 6 Autodeploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  lint_test:
+    name: Lint test
+    runs-on: self-hosted
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install test & lint tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest ansible ansible-lint
+
+      - name: Terraform fmt & validate
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.9.8
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - name: Terraform init (no backend)
+        working-directory: terraform
+        run: terraform init -backend=false
+
+      - name: Terraform fmt
+        working-directory: terraform
+        run: terraform fmt -check -diff
+
+      - name: Terraform validate
+        working-directory: terraform
+        run: terraform validate
+
+      - name: Ansible lint
+        run: ansible-lint ansible/install_docker.yml
+  deploy:
+    name: Deploy ansible & terraform
+    runs-on: self-hosted
+    needs: [lint_test]
+    if: ${{ success() }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: 1.9.8
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Terraform Apply
+        working-directory: terraform
+        run: |
+          terraform init -input=false
+          terraform apply -auto-approve -input=false
+
+      - name: Run Ansible
+        run: |
+          ansible-playbook ansible/install_docker.yml
