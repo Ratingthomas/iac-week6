@@ -109,6 +109,8 @@ EOF
 
 output "ips" {
   value = {
-    appserver = esxi_guest.appserver.ip_address
+    web = esxi_guest.web.ip_address
+    phpmyadmin = esxi_guest.phpmyadmin.ip_address
+    db = esxi_guest.db.ip_address
   }
 }
