@@ -23,7 +23,7 @@ variable "ovf_file" {
 }
 
 variable "name" {
-  default = "week2-2B"
+  default = "week6-NET"
 }
 
 variable "subscription_id" {
