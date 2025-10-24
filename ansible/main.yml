@@ -1,0 +1,26 @@
+---
+- name: Install Docker from official Docker repository
+  hosts: all
+  become: true
+  roles:
+    - install_docker
+
+  tasks:
+    - name: Install UFW
+      ansible.builtin.apt:
+        name: ufw
+        state: present
+        update_cache: true
+
+- name: Run mariadb docker containers
+  hosts: dbservers
+  become: true
+  roles:
+    - mariadb_docker
+
+  tasks:
+    - name: Allow port 3306
+      community.general.ufw:
+        rule: allow
+        port: "8080"
+        proto: tcp
