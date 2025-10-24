@@ -28,7 +28,7 @@ resource "azurerm_public_ip" "pip" {
   name                = "${var.name}-pip-${count.index + 1}"
   resource_group_name = data.azurerm_resource_group.main.name
   location            = data.azurerm_resource_group.main.location
-  allocation_method   = "Dynamic"
+  allocation_method   = "Static"
   sku                 = "Basic"
 }
 
