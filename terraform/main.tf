@@ -109,7 +109,7 @@ ansible_ssh_private_key_file=~/.ssh/skylab
 EOF
     EOT
   }
-  depends_on = [ 
+  depends_on = [
     azurerm_linux_virtual_machine.db,
     azurerm_linux_virtual_machine.web
   ]
