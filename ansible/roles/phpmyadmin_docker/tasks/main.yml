@@ -4,6 +4,8 @@
     name: "{{ phpmyadmin_docker_container_name }}"
     image: "{{ phpmyadmin_docker_image }}"
     restart_policy: always
+    env:
+      PMA_ARBITRARY: 1
     ports:
       - "{{ phpmyadmin_docker_port }}:80"
     state: started
