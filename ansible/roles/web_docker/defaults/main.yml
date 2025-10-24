@@ -1,0 +1,3 @@
+web_docker_name: helloworld
+web_docker_image: strm/helloworld-http
+web_docker_port: 80

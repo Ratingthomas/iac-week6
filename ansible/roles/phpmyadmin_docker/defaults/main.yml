@@ -1,0 +1,4 @@
+phpmyadmin_docker_container_name: phpmyadmin
+phpmyadmin_docker_image: phpmyadmin:latest
+phpmyadmin_docker_port: 80
+phpmyadmin_docker_network: backend
