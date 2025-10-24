@@ -1,7 +1,7 @@
 ---
 - name: Create MariaDB data directory
   ansible.builtin.file:
-    path: "{{ mariadb_data_dir }}"
+    path: "{{ mariadb_docker_data_dir }}"
     state: directory
     owner: root
     group: root
@@ -9,13 +9,13 @@
 
 - name: Run MariaDB container
   community.docker.docker_container:
-    name: "{{ mariadb_container_name }}"
-    image: "{{ mariadb_image }}"
+    name: "{{ mariadb_docker_container_name }}"
+    image: "{{ mariadb_docker_image }}"
     restart_policy: always
     env:
-      MARIADB_ROOT_PASSWORD: "{{ mariadb_root_password }}"
+      MARIADB_ROOT_PASSWORD: "{{ mariadb_docker_root_password }}"
     volumes:
       - "{{ mariadb_data_dir }}:/var/lib/mysql"
     ports:
-      - "{{ mariadb_port }}:3306"
+      - "{{ mariadb_docker_port }}:3306"
     state: started
