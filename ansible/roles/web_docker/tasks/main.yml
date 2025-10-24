@@ -1,0 +1,9 @@
+---
+- name: Run web app container
+  community.docker.docker_container:
+    name: "{{ web_docker_name }}"
+    image: "{{ web_docker_image }}"
+    restart_policy: always
+    ports:
+      - "{{ web_docker_port }}:80"
+    state: started
