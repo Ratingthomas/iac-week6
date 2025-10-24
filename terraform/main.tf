@@ -88,15 +88,19 @@ cat > ../inventory.ini<< EOF
 ${esxi_guest.web.ip_address}
 ${esxi_guest.phpmyadmin.ip_address}
 ${esxi_guest.db.ip_address}
+${azurerm_public_ip.pip[0].ip_address}
+${azurerm_public_ip.pip[1].ip_address}
 
 [managementservers]
 ${esxi_guest.phpmyadmin.ip_address}
 
 [webservers]
 ${esxi_guest.web.ip_address}
+${azurerm_public_ip.pip[1].ip_address}
 
 [dbservers]
 ${esxi_guest.db.ip_address}
+${azurerm_public_ip.pip[0].ip_address}
 
 [all:vars]
 ansible_ssh_common_args='-o StrictHostKeyChecking=no'
@@ -105,6 +109,10 @@ ansible_ssh_private_key_file=~/.ssh/skylab
 EOF
     EOT
   }
+  depends_on = [ 
+    azurerm_linux_virtual_machine.db,
+    azurerm_linux_virtual_machine.web
+  ]
 }
 
 output "ips" {
@@ -112,5 +120,7 @@ output "ips" {
     web        = esxi_guest.web.ip_address
     phpmyadmin = esxi_guest.phpmyadmin.ip_address
     db         = esxi_guest.db.ip_address
+    db_azure   = azurerm_public_ip.pip[0].ip_address
+    web_azure  = azurerm_public_ip.pip[1].ip_address
   }
 }
