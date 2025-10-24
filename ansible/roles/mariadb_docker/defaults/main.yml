@@ -1,0 +1,5 @@
+mariadb_docker_container_name: mariadb
+mariadb_docker_image: mariadb:11
+mariadb_docker_root_password: supersecurepassword
+mariadb_docker_data_dir: /opt/mariadb_data
+mariadb_docker_port: 3306

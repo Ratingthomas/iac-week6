@@ -46,7 +46,7 @@ jobs:
         run: terraform validate
 
       - name: Ansible lint
-        run: ansible-lint ansible/install_docker.yml
+        run: ansible-lint ansible/main.yml
   deploy:
     name: Deploy ansible & terraform
     runs-on: self-hosted
@@ -71,7 +71,11 @@ jobs:
         run: |
           terraform init -input=false
           terraform apply -auto-approve -input=false
+      
+      - name: Install Ansible collections
+        run: |
+          ansible-galaxy collection install community.docker community.general
 
       - name: Run Ansible
         run: |
-          ansible-playbook ansible/install_docker.yml
+          ansible-playbook ansible/main.yml
