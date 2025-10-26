@@ -1,7 +1,7 @@
 # IAC Week 6
 
 > [!IMPORTANT]  
-> Deze automatic deployment slaat zijn `.tfstate` niet op. Hiervoor kan Azure Account Storage gebruikt voor worden. Voor Azure Account Storage had ik helaas geen toegang om app credentails aan te maken voor terraform. Ga naar hoofdstuk `Account Storage` toe om te lezen hoe dit zou ingesteld moeten worden.
+> Deze automatic deployment slaat zijn `.tfstate` niet op. Hiervoor kan Azure Account Storage gebruikt voor worden. Voor Azure Account Storage had ik helaas geen toegang om app credentails aan te maken voor terraform. Ga naar hoofdstuk `Account Storage` toe om te lezen hoe dit ingesteld zou moeten worden.
 
 Deze repository deployed een hypride cloud stack met de volgende vm's:
 | Host  | Beschrijving                |
