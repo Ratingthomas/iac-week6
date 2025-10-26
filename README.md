@@ -1,5 +1,8 @@
 # IAC Week 6
 
+> [!IMPORTANT]  
+> Deze automatic deployment slaat zijn `.tfstate` niet op. Hiervoor kan Azure Account Storage gebruikt voor worden. Voor Azure Account Storage had ik helaas geen toegang om app credentails aan te maken voor terraform. Ga naar hoofdstuk `Account Storage` toe om te lezen hoe dit zou ingesteld moeten worden.
+
 Deze repository deployed een hypride cloud stack met de volgende vm's:
 | Host  | Beschrijving                |
 |-------|-----------------------------|
@@ -42,6 +45,45 @@ cd terraform
 terraform apply
 cd ../
 ansible-playbook ansible/main.yml
+```
+
+## Account Storage
+Deze automatic deployment slaat zijn `.tfstate` niet op. Hiervoor kan Azure Account Storage gebruikt voor worden. Voor Azure Account Storage had ik helaas geen toegang om app credentails aan te maken voor terraform. Als je hier wel toegang tot hebt moet de volgende wijziging doen:
+
+*Let op* Deze uitleg is niet volledig getest wegens een toegangsfout bij het aanmaken van de credentials.
+
+Pas `main.tf` aan naar het volgende:
+```tf
+terraform {
+  required_providers {
+    esxi = {
+      source = "registry.terraform.io/josenk/esxi"
+    }
+    azurerm = {
+      source  = "hashicorp/azurerm"
+      version = "~> 4.0"
+    }
+  }
+  backend "azurerm" {
+    resource_group_name  = "<name>"
+    storage_account_name = "<name>"
+    container_name       = "<name>"
+    key                  = "hybrid-infra.tfstate"
+  }
+}
+```
+
+Voeg het volgende stukje toe in de deploy job na de `Setup Terraform`. Doe dit in het bestand `.github/workflows/ci/yml`
+```yml
+- name: Login to Azure
+    uses: azure/login@v2
+    with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+```
+
+Genereer je credentails met het volgende commando. Plak daarna de output json in een nieuwe secret genaamd `AZURE_CREDENTIALS` in github.
+```bash
+az ad sp create-for-rbac --name github-terraform --role="Contributor" --scopes="/subscriptions/<sub_id>" --sdk-auth
 ```
 
 ## Bronnen
